@@ -9,6 +9,15 @@
     <button id="confirm">通知許可の確認</button>
     <button id="send">通知を送信</button>
     <script>
+      window.addEventListener('load', () => {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+            .register('sw.js')
+            .then(registration => console.log('registered', registration))
+            .catch(error => console.log('error', error));
+        }
+      });
+
       document
         .getElementById('confirm')
         .addEventListener('click', onClickConfirm);
@@ -20,21 +29,23 @@
           alert('このブラウザはプッシュ通知に対応してません。。。');
           return;
         }
-
         Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            alert('通知の許可がもらえました');
-          }
-          if (permission === 'denied') {
-            alert('通知の許可がもらえませんでした');
-          }
+          if (permission === 'granted') alert('通知の許可がもらえました');
+          if (permission === 'denied') alert('通知の許可がもらえませんでした');
         });
       }
 
       function onClickSend() {
+        if (!('Notification' in window)) {
+          alert('このブラウザはプッシュ通知に対応してません。。。');
+          return;
+        }
+
         const permission = Notification.permission;
         if (permission === 'granted') {
-          new Notification('Hello!!!');
+          navigator.serviceWorker.ready.then(registration => {
+            registration.active.postMessage('hello!!!');
+          });
         } else {
           alert('通知の許可がもらえませんよ');
         }
