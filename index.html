@@ -16,6 +16,11 @@
       document.getElementById('send').addEventListener('click', onClickSend);
 
       function onClickConfirm() {
+        if (!('Notification' in window)) {
+          alert('このブラウザはプッシュ通知に対応してません。。。');
+          return;
+        }
+
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             alert('通知の許可がもらえました');
