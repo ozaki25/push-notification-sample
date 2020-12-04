@@ -5,6 +5,35 @@
     <title>プッシュ通知サンプル</title>
   </head>
   <body>
-    <h1>プッシュ通知サンプル</h1>
+    <h1>Hello Push</h1>
+    <button id="confirm">通知許可の確認</button>
+    <button id="send">通知を送信</button>
+    <script>
+      document
+        .getElementById('confirm')
+        .addEventListener('click', onClickConfirm);
+
+      document.getElementById('send').addEventListener('click', onClickSend);
+
+      function onClickConfirm() {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            alert('通知の許可がもらえました');
+          }
+          if (permission === 'denied') {
+            alert('通知の許可がもらえませんでした');
+          }
+        });
+      }
+
+      function onClickSend() {
+        const permission = Notification.permission;
+        if (permission === 'granted') {
+          new Notification('Hello!!!');
+        } else {
+          alert('通知の許可がもらえませんよ');
+        }
+      }
+    </script>
   </body>
 </html>
